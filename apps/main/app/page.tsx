@@ -12,12 +12,6 @@ export default function Home(): React.ReactNode {
       </Text>
       <Text className="mb-4">
         In this microfrontends app we have a monorepo using{' '}
-        <a
-          className="text-link hover:text-link-light transition-colors"
-          href="https://turbo.build/repo/docs"
-        >
-          Turborepo
-        </a>{' '}
         with multiple packages, each using TypeScript and going through a
         different microfrontend technique:
       </Text>
