@@ -6,14 +6,14 @@ export default function AboutPage() {
     <Page>
       <Navbar isDocsApp />
       <Text variant="h1" className="mb-6">
-        About Docs
+        About Docs Page
       </Text>
-      <Text className="mb-4">
+      <Text className="mb-4" variant='smallText'>
         This is the about page in the docs app (
         <Code>apps/docs/app/docs/about/page.tsx</Code>).
       </Text>
-      <Text>
-        Navigations between <Link href="/docs">Docs</Link> and{' '}
+      <Text >
+        Navigationss between <Link href="/docs">Docs</Link> and{' '}
         <Link href="/docs/about">About Docs</Link> are client-side transitions
         because they&apos;re part of the same Next.js app. Navigating to{' '}
         <a
