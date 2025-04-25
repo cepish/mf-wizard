@@ -8,10 +8,7 @@ export default function Home(): React.ReactNode {
     <Page>
       <Navbar />
       <Text variant="h1" className="mb-6">
-        Microfrontends {process.env.DOCS_URL}
-      </Text>
-      <Text variant="smallText" className="mb-6">
-        DOCS_URL: {process.env.DOCS_URL}
+        Microfrontends
       </Text>
       <Text className="mb-4">
         In this microfrontends app we have a monorepo using{' '}
