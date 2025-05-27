@@ -57,8 +57,8 @@ The example is a monorepo built with [Turborepo](https://turborepo.org/) with th
 - Next.js is used for the applications in [./apps](./apps)
 - Shared packages used by the apps in [./packages](./packages)
 - [Tailwind CSS](https://tailwindcss.com) for utility CSS in React components and to build the design system
-- Storybook is used for the components that are part of the [`acme-design-system`](./packages/acme-design-system) package and its setup is shared in the [`acme-storybook`](./packages/acme-storybook) package
-- The ESLint config lives in [eslint-config-acme](./packages/eslint-config-acme)
+- Storybook is used for the components that are part of the [`mf-design-system`](./packages/mf-design-system) package and its setup is shared in the [`mf-storybook`](./packages/mf-storybook) package
+- The ESLint config lives in [eslint-config-mf](./packages/eslint-config-mf)
 - [Changesets](https://github.com/changesets/changesets) to manage versioning and publishing of packages. Learn more in the [Versioning & Publishing Packages](#versioning--publishing-packages) section.
 
 ## How it Works
@@ -71,13 +71,13 @@ There are many strategies for designing microfrontends and your approach will be
 
 In this example, [./apps/main](./apps/main) is our main app, and [./apps/docs](./apps/docs) is a separate app that handles all routes for [`/docs/**`](./apps/main/next.config.js). In the demo, you'll notice that navigating to `/docs` keeps you in the same domain. We have multiple apps in the same domain that are built independent of each other.
 
-You'll notice that transitions between `/docs/*` and `/` have to perform a full page refresh because the separate Next.js apps can't share their JS and don't have common chunks. Next.js prefetching is not possible here, and you have to rely on your own browser prefetching to streamline the transitions (see `packages/acme-components/src/prefetch-cross-zone-links.tsx` for an example). The slower transitions between apps may or may not be a problem depending on your specific use case. For that reason, we only recommend using Multi-Zones for cases where you have pages that are logically in separate applications but need to be served on the same domain.
+You'll notice that transitions between `/docs/*` and `/` have to perform a full page refresh because the separate Next.js apps can't share their JS and don't have common chunks. Next.js prefetching is not possible here, and you have to rely on your own browser prefetching to streamline the transitions (see `packages/mf-components/src/prefetch-cross-zone-links.tsx` for an example). The slower transitions between apps may or may not be a problem depending on your specific use case. For that reason, we only recommend using Multi-Zones for cases where you have pages that are logically in separate applications but need to be served on the same domain.
 
 For example, having a home app with your landing, marketing and legal pages and then having another app that handles all the pages related to documentation is a good separation of concerns, your users will only notice a slow transition once they move from your home app to view your documentation. Pro tip: Using `target="_blank"` in this situation is a nice improvement!
 
 ### Design System with Tailwind and CSS Modules
 
-[./packages/acme-design-system](./packages/acme-design-system) features multiple components with CSS Modules and [Tailwind](https://tailwindcss.com/). The components are installed in the app as a dependency and the compilation step is handled by [SWC](https://swc.rs/).
+[./packages/mf-design-system](./packages/mf-design-system) features multiple components with CSS Modules and [Tailwind](https://tailwindcss.com/). The components are installed in the app as a dependency and the compilation step is handled by [SWC](https://swc.rs/).
 
 All the CSS used by the app and components is unified by Tailwind, so having components outside the app doens't increase the CSS bundle size.
 
@@ -138,8 +138,8 @@ turbo run build --filter=main... && changeset publish
 
 Turborepo will run the `build` script for all publishable dependencies of the `main` app, excluding the `main` app itself, and then publishes the new versions to npm.
 
-By default, this example uses `acme` as the npm organization. To change this, do the following:
+By default, this example uses `mf` as the npm organization. To change this, do the following:
 
-- Rename folders in `packages/*` to replace `acme` with your desired scope
-- Search and replace `acme` with your desired scope
+- Rename folders in `packages/*` to replace `mf` with your desired scope
+- Search and replace `mf` with your desired scope
 - Re-run `pnpm install`

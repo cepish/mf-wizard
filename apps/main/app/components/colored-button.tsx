@@ -1,19 +1,19 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { Button, Quote } from '@acme/design-system'
-import { matchingTextColor, randomColor } from '@acme/utils'
+import { useState, useEffect } from "react";
+import { Button, Quote } from "@mf/design-system";
+import { matchingTextColor, randomColor } from "@mf/utils";
 
 export function ColoredButton() {
-  const [bgColor, setBgColor] = useState('')
-  const [textColor, setTextColor] = useState('')
+  const [bgColor, setBgColor] = useState("");
+  const [textColor, setTextColor] = useState("");
   const changeColor = () => {
-    const bg = randomColor()
-    setBgColor(bg)
-    setTextColor(matchingTextColor(bg))
-  }
+    const bg = randomColor();
+    setBgColor(bg);
+    setTextColor(matchingTextColor(bg));
+  };
 
-  useEffect(changeColor, [])
+  useEffect(changeColor, []);
 
   return (
     <>
@@ -33,5 +33,5 @@ export function ColoredButton() {
         </>
       )}
     </>
-  )
+  );
 }

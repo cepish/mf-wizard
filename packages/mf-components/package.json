@@ -1,5 +1,5 @@
 {
-  "name": "@acme/components",
+  "name": "@mf/components",
   "version": "0.0.1",
   "repository": "https://github.com/vercel/examples.git",
   "license": "MIT",
@@ -31,15 +31,15 @@
     "react-dom": "^18.0.0-0"
   },
   "dependencies": {
-    "@acme/design-system": "workspace:*",
-    "@acme/utils": "workspace:*",
+    "@mf/design-system": "workspace:*",
+    "@mf/utils": "workspace:*",
     "@vercel/examples-ui": "^1.0.5",
     "clsx": "^1.2.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.10",
     "eslint": "^8.38.0",
-    "eslint-config-acme": "workspace:*",
+    "eslint-config-mf": "workspace:*",
     "typescript": "^5.0.4"
   }
 }

@@ -17,7 +17,8 @@
     "release": "turbo run build --filter=main... && changeset publish",
     "type-check": "turbo run type-check",
     "start": "turbo run start",
-    "version-packages": "changeset version"
+    "version-packages": "changeset version",
+    "mf-init": "node scripts/mf-init-project/init.js"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.8",

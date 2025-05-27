@@ -1,7 +1,7 @@
-import { Page, Text, Code, Link, Snippet } from '@vercel/examples-ui'
-import { Navbar } from '@acme/components/navbar'
-import { Button, Quote } from '@acme/design-system'
-import { ColoredButton } from './components/colored-button'
+import { Page, Text, Code, Link, Snippet } from "@vercel/examples-ui";
+import { Navbar } from "@mf/components/navbar";
+import { Button, Quote } from "@mf/design-system";
+import { ColoredButton } from "./components/colored-button";
 
 export default function Home(): React.ReactNode {
   return (
@@ -11,9 +11,9 @@ export default function Home(): React.ReactNode {
         Microfrontends
       </Text>
       <Text className="mb-4">
-        In this microfrontends app we have a monorepo using{' '}
-        with multiple packages, each using TypeScript and going through a
-        different microfrontend technique:
+        In this microfrontends app we have a monorepo using with multiple
+        packages, each using TypeScript and going through a different
+        microfrontend technique:
       </Text>
       <Text variant="h2" className="mt-10 mb-6">
         apps/main
@@ -22,11 +22,11 @@ export default function Home(): React.ReactNode {
         This is the current Next.js site you&apos;re looking at!
       </Text>
       <Text className="mb-4">
-        You&apos;re currently looking at the Home page, defined in{' '}
+        You&apos;re currently looking at the Home page, defined in{" "}
         <Code>apps/main/app/page.tsx</Code>.
       </Text>
       <Text variant="h2" className="mt-10 mb-6">
-        packages/acme-design-system
+        packages/mf-design-system
       </Text>
       <Text className="mb-4">
         Example of how you could build a Design System, it&apos;s a set of React
@@ -37,16 +37,16 @@ export default function Home(): React.ReactNode {
         This is the <Code>Quote</Code> component in the design system.
       </Quote>
       <Text variant="h2" className="mt-10 mb-6">
-        packages/acme-components
+        packages/mf-components
       </Text>
       <Text className="mb-4">
-        Works in the same way as <Code>packages/acme-design-system</Code> but
+        Works in the same way as <Code>packages/mf-design-system</Code> but
         instead of building a design system it&apos;s about having shared
         components that can be used across applications such as the navigation
         bar.
       </Text>
       <Text variant="h2" className="mt-10 mb-6">
-        packages/acme-utils
+        packages/mf-utils
       </Text>
       <Text className="mb-4">This package exports utility functions.</Text>
       <Text className="mb-4">
@@ -58,7 +58,7 @@ export default function Home(): React.ReactNode {
         apps/docs (Multi-Zones)
       </Text>
       <Text className="mb-4">
-        Next.js application that takes care of handling the pages for{' '}
+        Next.js application that takes care of handling the pages for{" "}
         <Code>/docs/**</Code>.
       </Text>
       <Text className="mb-4">
@@ -79,18 +79,18 @@ export default function Home(): React.ReactNode {
         be reflected unless you also run that application locally.
       </Text>
       <Text variant="h2" className="mt-10 my-6">
-        packages/acme-storybook
+        packages/mf-storybook
       </Text>
       <Text className="mb-4">
-        This packages takes the stories in{' '}
-        <Code>packages/acme-design-system</Code> and opens them in{' '}
+        This packages takes the stories in{" "}
+        <Code>packages/mf-design-system</Code> and opens them in{" "}
         <Link href="https://storybook.js.org/" target="_blank">
           Storybook
         </Link>
         .
       </Text>
       <Text variant="h2" className="mt-10 my-6">
-        packages/eslint-config-acme
+        packages/eslint-config-mf
       </Text>
       <Text className="mb-4">
         Exports the Eslint configuration that will be used by all apps and
@@ -107,8 +107,8 @@ export default function Home(): React.ReactNode {
       </Text>
       <Snippet className="mb-4">{`module.exports = {
   root: true,
-  extends: ['acme'],
+  extends: ['mf'],
 }`}</Snippet>
     </Page>
-  )
+  );
 }

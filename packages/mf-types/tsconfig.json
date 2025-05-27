@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@your-org/types": ["packages/types"]
+      // ... other path mappings
+    }
+  },
+  "exclude": ["node_modules"]
+}
