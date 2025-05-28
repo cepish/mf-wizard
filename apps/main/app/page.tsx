@@ -8,7 +8,7 @@ export default function Home(): React.ReactNode {
     <Page>
       <Navbar />
       <Text variant="h1" className="mb-6">
-        Microfrontends
+        Microfrontends (disconnected)
       </Text>
       <Text className="mb-4">
         In this microfrontends app we have a monorepo using with multiple
