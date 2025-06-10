@@ -1,0 +1,134 @@
+name: "Vercel Deploy"
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  WATCH_PATHS_FILE_NAME: "watch-paths.json"
+
+jobs:
+  # First job: figure out which apps have changes and should be deployed
+  generate-matrix:
+    runs-on: ubuntu-latest
+    # output a matrix object (list of apps to deploy)
+    outputs:
+      matrix: ${{steps.set-matrix.outputs.matrix}}
+    steps:
+      # Check out the repo so the workflow can access files
+      - uses: actions/checkout@v4
+
+      # Set up a Node.js environment to run our script
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      # Run a custom Node.js script that generates a JSON file
+      # This file maps each app (like "docs") to its file dependencies
+      # The > symbol saves the output into a new file: watch-paths.json
+      - name: Generate app-to-paths mapping
+        run: node ./scripts/generate-watch-paths.js > "$WATCH_PATHS_FILE_NAME"
+
+      - name: Determine affected apps
+        id: set-matrix
+        # "run: |" execute script as one continuous block of commands
+        # instead of putting your entire Bash script on a single, long line
+        run: |
+          echo "Checking which apps have been affected..."
+
+          # 🔄 list of changed files since the last push to main
+          CHANGED_FILES=$(git diff --name-only origin/master...HEAD)
+
+          # 🔄 read this json file that has just been created
+          WATCH_PATHS=$(cat "$WATCH_PATHS_FILE_NAME")
+
+          # 🔄 create an empty list to add changed apps to it later
+          CHANGED_APPS=()
+
+          # 🔄 loop over each app listed in the watch-paths.json
+          # 🔄 keys e.g. main, docs, etc
+          for app in $(jq -r 'keys[]' "$WATCH_PATHS_FILE_NAME"); do
+
+            # 🔄 get the file path patterns associated with this app
+            # 🔄 path e.g. "apps/docs/**\npackages/ui/**\npackages/utils/**"
+            paths=$(jq -r --arg app "$app" '.[$app][]' "$WATCH_PATHS_FILE_NAME")
+
+            # 🔄 for each path pattern, check if any changed file matches
+            for path in $paths; do
+              for file in $CHANGED_FILES; do
+                if [[ "$file" == $path ]]; then
+                  # ✅ if a file matches, mark this app as changed and move on
+                  CHANGED_APPS+=("$app")
+                  break 3  # 🔄 stop checking once a match is found
+                fi
+              done
+            done
+          done
+
+          # 🔄 remove duplicates and format as a JSON array of objects
+          # 🔄 format: [{ "app": "docs" }, { "app": "main" }]
+          UNIQUE_APPS=$(printf "%s\n" "${CHANGED_APPS[@]}" | sort -u | jq -R -s -c 'split("\n")[:-1] | map({app: .})')
+
+          echo "Apps to deploy: $UNIQUE_APPS"
+
+          # 🧾 Set the matrix output for use by the deploy job
+          # echo "::set-output name=matrix::{\"include\":$UNIQUE_APPS}"
+          echo "matrix={\"include\":$UNIQUE_APPS}" >> $GITHUB_OUTPUT
+
+  # Second job: use the matrix to deploy each changed app
+  deploy:
+    # this job depends on the matrix generation step
+    needs: generate-matrix
+    runs-on: ubuntu-latest
+    # Only run steps if the matrix has at least one app
+    if: ${{ fromJson(needs.generate-matrix.outputs.matrix).include.length > 0 }}
+
+    # define the matrix — runs once for each app in the list
+    strategy:
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build app
+        run: |
+          echo "Building app: ${{ matrix.app }}"
+          pnpm turbo run build --filter=${{ matrix.app }}
+
+      - name: Set Vercel token and project ID (Node.js)
+        run: node ./scripts/set-vercel-env.js ${{ matrix.app }}
+        env:
+          # inject this envs for Node.js script
+          VERCEL_TOKEN_DOCS_APP: ${{ secrets.VERCEL_TOKEN_DOCS_APP }}
+          VERCEL_PROJECT_ID_DOCS_APP: ${{ secrets.VERCEL_PROJECT_ID_DOCS_APP }}
+          VERCEL_TOKEN_MAIN_APP: ${{ secrets.VERCEL_TOKEN_MAIN_APP }}
+          VERCEL_PROJECT_ID_MAIN_APP: ${{ secrets.VERCEL_PROJECT_ID_MAIN_APP }}
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      # 🚀 Step 2: Deploy the app — customize this with your deployment command
+      - name: Deploy to Vercel
+        run: |
+          echo "Deploying app: ${{ matrix.app }}"
+          vercel --cwd apps/${{ matrix.app }} \
+                --prod \
+                --token $VERCEL_TOKEN \
+                --project $VERCEL_PROJECT_ID
