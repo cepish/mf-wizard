@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <Layout title="Microfrontends Docs App" path="solutions/microfrontends">
+        <Layout title="Microfrontends Docs" path="solutions/microfrontends">
           {children}
         </Layout>
         <PrefetchCrossZoneLinks hrefs={["/", "/about"]} />

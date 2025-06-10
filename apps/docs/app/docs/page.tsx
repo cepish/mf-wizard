@@ -9,7 +9,7 @@ export default function IndexPage() {
         Docs (disconnected)
       </Text>
       <Text className="mb-4">
-        This is the index page in the docs app (
+        This is the index page in the Docs app (
         <Code>apps/docs/app/docs/page.tsx</Code>).
       </Text>
       <Text>
