@@ -28,6 +28,8 @@ jobs:
           echo "Base commit: $BASE"
           git diff --name-only $BASE HEAD
 
+          echo "Files changed from base: $BASE"
+
       # Set up a Node.js environment to run our script
       - name: Set up Node.js
         uses: actions/setup-node@v3
