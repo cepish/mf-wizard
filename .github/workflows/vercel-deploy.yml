@@ -21,17 +21,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fetch master
-        run: git fetch origin master:refs/remotes/origin/master
-
-      - name: List changed files
-        run: |
-          BASE=$(git merge-base origin/master HEAD)
-          echo "Base commit: $BASE"
-          CHANGED_FILES=$(git diff --name-only $BASE HEAD)
-
-          echo "Files changed from base: $CHANGED_FILES"
-
       # Set up a Node.js environment to run our script
       - name: Set up Node.js
         uses: actions/setup-node@v3
