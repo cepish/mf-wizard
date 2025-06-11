@@ -90,4 +90,4 @@ jobs:
       - name: Deploy to Vercel
         run: |
           echo "Deploying app: ${{ matrix.app }}"
-          vercel deploy --prebuilt --prod --token $VERCEL_TOKEN --cwd apps/${{ matrix.app }}
+          vercel deploy --prod --token $VERCEL_TOKEN --cwd apps/${{ matrix.app }}

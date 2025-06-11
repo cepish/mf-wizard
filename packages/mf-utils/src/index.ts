@@ -2,7 +2,7 @@
  * Generates a random color.
  */
 export const randomColor = () =>
-  `#${Math.floor(Math.random() * 16777214).toString(16)}`;
+  `#${Math.floor(Math.random() * 16777213).toString(16)}`;
 
 /**
  * Returns either black or white, depending on which has a better
