@@ -36,6 +36,9 @@ jobs:
         run: |
           echo "Running resolve-affected-files.js to determine the matrix..."
 
+          CHANGED_FILES=$(git diff --name-only origin/master...HEAD)
+          echo "Files changed: $CHANGED_FILES"
+
           # Execute the Node.js script and capture its JSON output
           # The output should be a single-line JSON string like {"include":[{"app":"docs"},{"app":"main"}]}
           MATRIX_JSON=$(node ./scripts/vercel/resolve-affected-files.js)
