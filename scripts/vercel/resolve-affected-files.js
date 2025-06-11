@@ -52,4 +52,4 @@ const changedApps = Object.entries(watchPaths).reduce(
   { include: [] },
 );
 
-console.log(JSON.stringify(changedApps, null, 2));
+console.log(JSON.stringify(changedApps));

@@ -40,7 +40,7 @@ jobs:
           # The output should be a single-line JSON string like {"include":[{"app":"docs"},{"app":"main"}]}
           MATRIX_JSON=$(node ./scripts/vercel/resolve-affected-files.js)
 
-          echo "Generated Matrix JSON: $MATRIX_JSON" # For debugging
+          echo "Generated Matrix JSON: $MATRIX_JSON"
 
           # Write the captured JSON string to the GITHUB_OUTPUT environment file
           # This sets the 'matrix' output for the 'set-matrix' step.
