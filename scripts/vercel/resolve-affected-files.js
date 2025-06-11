@@ -6,15 +6,8 @@ const path = require("path");
 const { minimatch } = require("minimatch");
 const { execSync } = require("child_process");
 
-const beforeSha = process.env.GITHUB_BEFORE_SHA;
-const currentSha = process.env.GITHUB_CURRENT_SHA;
-
-if (!beforeSha || !currentSha) {
-  console.error(
-    "Error: GITHUB_BEFORE_SHA and GITHUB_CURRENT_SHA environment variables must be set.",
-  );
-  process.exit(1);
-}
+const beforeSha = process.env.GITHUB_BEFORE_SHA || "origin/master";
+const currentSha = process.env.GITHUB_CURRENT_SHA || "HEAD";
 
 /** list of changed files since the last push to main */
 const changedFiles = execSync(
@@ -57,12 +50,12 @@ const changedApps = Object.entries(watchPaths).reduce(
     }, false);
 
     if (matchFound) {
-      acc.include.push(app);
+      acc.push(app);
     }
 
     return acc;
   },
-  { include: [] },
+  [],
 );
 
 console.log(JSON.stringify(changedApps));

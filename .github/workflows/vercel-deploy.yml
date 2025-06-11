@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     # output a matrix object (list of apps to deploy)
     outputs:
-      matrix: ${{steps.set-matrix.outputs.matrix}}
+      apps: ${{steps.set-matrix.outputs.apps}}
     steps:
       # Check out the repo so the workflow can access files
       - uses: actions/checkout@v4
@@ -46,14 +46,14 @@ jobs:
           echo "Files changed: $CHANGED_FILES"
 
           # Execute the Node.js script and capture its JSON output
-          # The output should be a single-line JSON string like {"include":[{"app":"docs"},{"app":"main"}]}
+          # The output should be a single-line JSON string like ["app","docs"]
           MATRIX_JSON=$(node ./scripts/vercel/resolve-affected-files.js)
 
           echo "Generated Matrix JSON: $MATRIX_JSON"
 
           # Write the captured JSON string to the GITHUB_OUTPUT environment file
           # This sets the 'matrix' output for the 'set-matrix' step.
-          echo "matrix=$MATRIX_JSON" >> "$GITHUB_OUTPUT"
+          echo "apps=$MATRIX_JSON" >> "$GITHUB_OUTPUT"
 
   # Second job: use the matrix to deploy each changed app
   deploy:
@@ -61,11 +61,12 @@ jobs:
     needs: generate-matrix
     runs-on: ubuntu-latest
     # Only run steps if the matrix has at least one app
-    if: ${{ fromJson(needs.generate-matrix.outputs.matrix).include.length > 0 }}
+    if: ${{ fromJson(needs.generate-matrix.outputs.apps).length > 0 }}
 
     # define the matrix — runs once for each app in the list
     strategy:
-      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+      matrix:
+        app: ${{ fromJson(needs.generate-matrix.outputs.apps) }}
 
     steps:
       - uses: actions/checkout@v4
