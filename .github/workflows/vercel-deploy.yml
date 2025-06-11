@@ -80,6 +80,8 @@ jobs:
           VERCEL_PROJECT_ID_DOCS_APP: ${{ secrets.VERCEL_PROJECT_ID_DOCS_APP }}
           VERCEL_TOKEN_MAIN_APP: ${{ secrets.VERCEL_TOKEN_MAIN_APP }}
           VERCEL_PROJECT_ID_MAIN_APP: ${{ secrets.VERCEL_PROJECT_ID_MAIN_APP }}
+          VERCEL_ORG_ID_MAIN_APP: ${{ secrets.VERCEL_ORG_ID_MAIN_APP }}
+          VERCEL_ORG_ID_DOCS_APP: ${{ secrets.VERCEL_ORG_ID_DOCS_APP }}
 
       - name: Install Vercel CLI
         run: npm install -g vercel
