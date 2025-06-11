@@ -13,7 +13,7 @@ if (!appName || !config[appName]) {
   process.exit(1);
 }
 
-const { token, projectId } = config[appName];
+const { token, projectId, orgId } = config[appName];
 
 if (!token || !projectId) {
   console.error(`Missing token or projectId for app: ${appName}`);
@@ -23,3 +23,4 @@ if (!token || !projectId) {
 // Write the environment variables to GITHUB_ENV
 fs.appendFileSync(envFile, `VERCEL_TOKEN=${token}\n`);
 fs.appendFileSync(envFile, `VERCEL_PROJECT_ID=${projectId}\n`);
+fs.appendFileSync(envFile, `VERCEL_ORG_ID=${orgId}\n`);
