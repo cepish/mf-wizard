@@ -8,13 +8,15 @@
  * This script is used to deploy vercel applications.
  *
  * usage:
- * node scripts/generate-watch-paths.js > watch-paths.json
+ * node scripts/vercel/generate-watch-paths.js > watch-paths.json
  */
 const fs = require("fs");
 const path = require("path");
 
-const appsDir = path.join(__dirname, "..", "apps");
-const packagesDir = path.join(__dirname, "..", "packages");
+const rootDir = (segment) => path.join(__dirname, "..", "..", segment);
+
+const appsDir = rootDir("apps");
+const packagesDir = rootDir("packages");
 /**
  * Get workspace dependencies per ./apps application
  *
@@ -78,12 +80,12 @@ function generateWatchMap() {
     const workspaceDependencies = getWorkspaceDeps(path.join(appsDir, app));
 
     acc[app] = resolvePaths(app, workspaceDependencies);
+    acc[app].push(`apps/${app}/**`); // Include app's own files
+
     return acc;
   }, {});
 
   return map;
 }
 
-const worspaceDependenciesOutput = generateWatchMap();
-
-console.log(JSON.stringify(worspaceDependenciesOutput, null, 2));
+console.log(JSON.stringify(generateWatchMap(), null, 2));

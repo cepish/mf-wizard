@@ -23,6 +23,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.8",
     "@types/node": "20.11.30",
+    "minimatch": "^10.0.1",
     "prettier": "3.2.5",
     "turbo": "^2.2.3"
   },

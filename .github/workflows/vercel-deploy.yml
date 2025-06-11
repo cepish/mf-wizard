@@ -25,60 +25,26 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Install pnpm # Required to run pnpm install in the next step
+        run: npm install -g pnpm
 
-      # Run a custom Node.js script that generates a JSON file
-      # This file maps each app (like "docs") to its file dependencies
-      # The > symbol saves the output into a new file: watch-paths.json
-      - name: Generate app-to-paths mapping
-        run: node ./scripts/generate-watch-paths.js > "$WATCH_PATHS_FILE_NAME"
+      - name: Install dependencies # Installs all workspace dependencies, including minimatch (if in root devDeps)
+        run: pnpm install --frozen-lockfile
 
       - name: Determine affected apps
         id: set-matrix
-        # "run: |" execute script as one continuous block of commands
-        # instead of putting your entire Bash script on a single, long line
         run: |
-          echo "Checking which apps have been affected..."
+          echo "Running resolve-affected-files.js to determine the matrix..."
 
-          # 🔄 list of changed files since the last push to main
-          CHANGED_FILES=$(git diff --name-only origin/master...HEAD)
+          # Execute the Node.js script and capture its JSON output
+          # The output should be a single-line JSON string like {"include":[{"app":"docs"},{"app":"main"}]}
+          MATRIX_JSON=$(node ./scripts/vercel/resolve-affected-files.js)
 
-          # 🔄 read this json file that has just been created
-          WATCH_PATHS=$(cat "$WATCH_PATHS_FILE_NAME")
+          echo "Generated Matrix JSON: $MATRIX_JSON" # For debugging
 
-          # 🔄 create an empty list to add changed apps to it later
-          CHANGED_APPS=()
-
-          # 🔄 loop over each app listed in the watch-paths.json
-          # 🔄 keys e.g. main, docs, etc
-          for app in $(jq -r 'keys[]' "$WATCH_PATHS_FILE_NAME"); do
-
-            # 🔄 get the file path patterns associated with this app
-            # 🔄 path e.g. "apps/docs/**\npackages/ui/**\npackages/utils/**"
-            paths=$(jq -r --arg app "$app" '.[$app][]' "$WATCH_PATHS_FILE_NAME")
-
-            # 🔄 for each path pattern, check if any changed file matches
-            for path in $paths; do
-              for file in $CHANGED_FILES; do
-                if [[ "$file" == $path ]]; then
-                  # ✅ if a file matches, mark this app as changed and move on
-                  CHANGED_APPS+=("$app")
-                  break 3  # 🔄 stop checking once a match is found
-                fi
-              done
-            done
-          done
-
-          # 🔄 remove duplicates and format as a JSON array of objects
-          # 🔄 format: [{ "app": "docs" }, { "app": "main" }]
-          UNIQUE_APPS=$(printf "%s\n" "${CHANGED_APPS[@]}" | sort -u | jq -R -s -c 'split("\n")[:-1] | map({app: .})')
-
-          echo "Apps to deploy: $UNIQUE_APPS"
-
-          # 🧾 Set the matrix output for use by the deploy job
-          # echo "::set-output name=matrix::{\"include\":$UNIQUE_APPS}"
-          echo "matrix={\"include\":$UNIQUE_APPS}" >> $GITHUB_OUTPUT
+          # Write the captured JSON string to the GITHUB_OUTPUT environment file
+          # This sets the 'matrix' output for the 'set-matrix' step.
+          echo "matrix=$MATRIX_JSON" >> "$GITHUB_OUTPUT"
 
   # Second job: use the matrix to deploy each changed app
   deploy:
@@ -113,7 +79,7 @@ jobs:
           pnpm turbo run build --filter=${{ matrix.app }}
 
       - name: Set Vercel token and project ID (Node.js)
-        run: node ./scripts/set-vercel-env.js ${{ matrix.app }}
+        run: node ./scripts/vercel/set-env.js ${{ matrix.app }}
         env:
           # inject this envs for Node.js script
           VERCEL_TOKEN_DOCS_APP: ${{ secrets.VERCEL_TOKEN_DOCS_APP }}

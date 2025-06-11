@@ -1,10 +1,9 @@
 /**
  * This script is responsible for setting Vercel environment variables.
- * It is used in the "Set Vercel token and project ID (Node.js)" step
- * of vercel-deploy.yml
+ * It is used in the "Set Vercel token and project ID (Node.js)" step  of vercel-deploy.yml
  */
 const fs = require("fs");
-const config = require("./vercel-config");
+const config = require("./deploy-config");
 
 const appName = process.argv[2];
 const envFile = process.env.GITHUB_ENV;
