@@ -25,6 +25,12 @@ jobs:
       - name: Fetch master
         run: git fetch origin master:refs/remotes/origin/master
 
+      - name: Show Git refs and history
+        run: |
+          git remote -v
+          git branch -a
+          git log --oneline --graph --decorate -n 10
+
       - name: List changed files
         run: |
           BASE=$(git merge-base origin/master HEAD)
