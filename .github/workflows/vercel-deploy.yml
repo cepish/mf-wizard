@@ -22,6 +22,9 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.head_ref }} # Ensures named branch
 
+      - name: Fetch master
+        run: git fetch origin master:refs/remotes/origin/master
+
       - name: List changed files
         run: |
           BASE=$(git merge-base origin/master HEAD)
