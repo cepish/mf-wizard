@@ -12,7 +12,7 @@ jobs:
   # First job: figure out which apps have changes and should be deployed
   generate-matrix:
     runs-on: ubuntu-latest
-    # output a matrix object (list of apps to deploy)
+    # output an apps object (list of apps to deploy)
     outputs:
       apps: ${{steps.set-matrix.outputs.apps}}
     steps:
@@ -61,7 +61,7 @@ jobs:
     needs: generate-matrix
     runs-on: ubuntu-latest
     # Only run steps if the matrix has at least one app
-    # if: ${{ fromJson(needs.generate-matrix.outputs.apps).length > 0 }}
+    if: needs.generate-matrix.outputs.apps != '[]'
 
     # define the matrix — runs once for each app in the list
     strategy:
