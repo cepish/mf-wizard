@@ -6,10 +6,23 @@ const path = require("path");
 const { minimatch } = require("minimatch");
 const { execSync } = require("child_process");
 
+const beforeSha = process.env.GITHUB_BEFORE_SHA;
+const currentSha = process.env.GITHUB_CURRENT_SHA;
+
+if (!beforeSha || !currentSha) {
+  console.error(
+    "Error: GITHUB_BEFORE_SHA and GITHUB_CURRENT_SHA environment variables must be set.",
+  );
+  process.exit(1);
+}
+
 /** list of changed files since the last push to main */
-const changedFiles = execSync(`git diff --name-only origin/master...HEAD`, {
-  encoding: "utf8",
-})
+const changedFiles = execSync(
+  `git diff --name-only ${beforeSha} ${currentSha}`,
+  {
+    encoding: "utf8",
+  },
+)
   .split("\n")
   .filter(Boolean);
 

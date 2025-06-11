@@ -35,6 +35,9 @@ jobs:
 
       - name: Determine affected apps
         id: set-matrix
+        env: # <--- Define environment need for resolve-affected-files.js script
+          GITHUB_BEFORE_SHA: ${{ github.event.before }}
+          GITHUB_CURRENT_SHA: ${{ github.sha }}
         run: |
           echo "Running resolve-affected-files.js to determine the matrix..."
 
