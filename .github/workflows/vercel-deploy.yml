@@ -26,9 +26,9 @@ jobs:
         run: |
           BASE=$(git merge-base origin/master HEAD)
           echo "Base commit: $BASE"
-          git diff --name-only $BASE HEAD
+          CHANGED_FILES=$(git diff --name-only $BASE HEAD)
 
-          echo "Files changed from base: $BASE"
+          echo "Files changed from base: $CHANGED_FILES"
 
       # Set up a Node.js environment to run our script
       - name: Set up Node.js
