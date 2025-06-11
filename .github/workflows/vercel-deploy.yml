@@ -61,7 +61,7 @@ jobs:
     needs: generate-matrix
     runs-on: ubuntu-latest
     # Only run steps if the matrix has at least one app
-    if: ${{ fromJson(needs.generate-matrix.outputs.apps).length > 0 }}
+    # if: ${{ fromJson(needs.generate-matrix.outputs.apps).length > 0 }}
 
     # define the matrix — runs once for each app in the list
     strategy:
