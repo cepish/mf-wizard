@@ -1,0 +1,16 @@
+# .github/actions/setup-node-pnpm/action.yml
+name: Setup Node and PNPM
+description: Sets up Node.js, installs pnpm and dependencies
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install pnpm
+      run: npm install -g pnpm
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile

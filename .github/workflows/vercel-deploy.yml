@@ -22,16 +22,8 @@ jobs:
           fetch-depth: 0
 
       # Set up a Node.js environment to run our script
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install pnpm # Required to run pnpm install in the next step
-        run: npm install -g pnpm
-
-      - name: Install dependencies # Installs all workspace dependencies, including minimatch (if in root devDeps)
-        run: pnpm install --frozen-lockfile
+      - name: Setup Node, npm, pnpm
+        uses: "./.github/actions/setup-node-pnpm"
 
       - name: Determine affected apps
         id: set-matrix
@@ -71,17 +63,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: pnpm
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # Set up a Node.js environment to run our script
+      - name: Setup Node, npm, pnpm
+        uses: "./.github/actions/setup-node-pnpm"
 
       - name: Build app
         run: |
